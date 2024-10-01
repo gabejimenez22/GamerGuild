@@ -6,6 +6,12 @@
 
 </form>
 
+
+
+{%if request.user.is_authenticated%}
+<a href="">Logout</a>
+{% else %}
 <a href="{% url '' %}">Login</a>
+{% endif %}
 
 <hr
