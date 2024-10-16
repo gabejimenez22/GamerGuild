@@ -82,8 +82,8 @@ def room(request,pk):
     participants = room.participants.all()
 
 
-if request.method == 'POST':
-    message = Message.objects.create(
+    if request.method == 'POST':
+        message = Message.objects.create(
         user=request.user,
         room=room,
         body=request.POST.get('body')
@@ -99,7 +99,9 @@ def createRoom(request):
     if request.method == 'POST':
         form = RoomForm(request.POST)
         if form.is_valid():
-            form.save()
+            room = form.save(commit=False)
+            room.host = request.user
+            room.save()
             return redirect('home')
 
         
@@ -138,8 +140,8 @@ def deleteroom(request, pk):
 
 
     @login_required(login_url='login')
-def deleteMessage(request, pk):
-    room = Room.objects.get(id=pk)
+    def deleteMessage(request, pk):
+        room = Room.objects.get(id=pk)
 
     if request.user != message.user:
         return HttpResponse('you are not allowed here')
